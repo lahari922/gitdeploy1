@@ -1,0 +1,83 @@
+Jenkins - running notes
+
+1 - Jenkins- continuous integration - open source
+circle CI
+Bamboo
+Gitlab
+Travis CI
+Teamcity
+codeShip
+
+
+2 Plan , code, Build , test,deploy , operate, and monitor
+3* - Jenkins default port number - 8080.
+4*- Jenkins is purly working with plugins.
+5 - install java by using cmd
+ yum install fontconfig java-11-openjdk
+
+6- environment variables in /etc/profile
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.23.0.9-2.amzn2.0.1.x86_64
+export PATH=$JAVA_HOME/bin:$PATH
+
+7- to check java is installed correctly or not we can use cmd
+source /etc/profile
+echo $JAVA_HOME
+
+8 - Maven - yum install maven -y
+environment variables in /etc/profile
+export MAVEN_HOME=/usr/share/maven
+
+9- cmd to know which operating system is working
+cat /etc/os-release
+
+10 - Jenkins - before Jenkins install we need install some packages which are in Jenkins.io
+yum install Jenkins
+
+11 - connect to Jenkins dashboard - user id - jenkinsadmin, pw -admin123
+public ip:8080
+ 2 types of troubleshoot when Jenkins dashboard is not loading
+a status of Jenkins
+systemctl status Jenkins
+systemctl start Jenkins
+b add inbound rule in security group  with all traffic allow
+c networking connectivity as well 
+
+12 - echo is unix cmd used for displaying lines of text or string which are passed as arguments, this cmd is used in shell scripts
+
+13- default Jenkins path - /var/lib/jenkins
+
+14 -  Jenkins job - it is sequential set of tasks that  user defines
+source code management - SCM or svn
+free style job - jobname- 
+plugins - manage Jenkins - manage plugins
+
+15 - SCM - install - SVn - subversion
+
+16 - Build tool - Maven - pls refer maven notes
+
+17 - Build trigger -  5 types of build triggers 
+to run/ configure the jobs automatically 
+ A- trigger builds remotely - job access
+token name = token1
+JENKINS_URL/job/job1/build?token=TOKEN_NAME or /buildWithParameters?token=TOKEN_NAME
+http://52.91.86.144:8080/job/job1/build?token=token1
+
+B- build after other project
+ - upstream and down stream jobs in Jenkins
+up stream - it is configured project that triggers a project as part of its execution
+down stream - it is configured project that is triggered as part of a execution of pipeline.
+
+C-. build periodically - to schedule a job automatically
+Minute 0-59
+Hour 0-23
+DOM 1-31
+Month 1-12
+DOW 0-7
+
+* * * * *
+D  - GitHub hook trigger for GIT SCM polling
+whenever developer pushing the code it is automatically taking the input form git hub Jenkins will run the job automatically
+it request for payload URL in git hub - 
+
+
+
