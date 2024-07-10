@@ -1,0 +1,468 @@
+Docker:
+___________
+ Containeraization tool- Docker , Rancher
+Docker  is a open source plaform for develeping, building, shipping and running application
+
+
+Docker installation:
++++++++++++++
+
+https://docs.aws.amazon.com/AmazonECS/latest/developerguide/create-container-image.html
+
+VM - On Primises -200gb,
+Docker - Cloud - mb size
+
+Diff b/w Docker conatiner & VM(Virtual Machine)
+=================================
+https://dockerlabs.collabnix.com/beginners/difference-docker-vm.html
+
+
+
+Docker image - is a set of binaries and libraries, its just a stastic file
+Container- Container is nothing but running instances of an images
+
+vim Dockerfile
++++++++++++++++++
+FROM --> Which base image that you want to use your custom image either it could be OS
+MAINTAINER - author of the file -my name/emai id
+RUN --> When you want to install/update/upgrade  - using with Linux command - RUN yum install git -y & Maven, Jenkins
+EXPOSE --> Container port 80, 8080, 9090
+COPY - Copy file from host to container
+ADD - Copy file from host to container can download files from remote server and place on container
+LABEL --> specify with the tag name/version
+USER --> Default user who should log on to the container / root
+CMD --> Run an application on the container -- /bin/bash
+ENTRYPOINT--> to run default process to the container
+VOLUME--> is a keyword that use to define default volumes of the container - container is crashed
+ENV - ENV is for future running containers. ARG for building your Docker image. ... 
+      ENV is mainly meant to provide default values for your future environment variables. 
+      Running dockerized applications can access environment variables. 
+      It's a great way to pass configuration values to your project
+
+
+
+Dockerfile:
+++++++++++++++
+FROM centos:7
+MAINTAINER sobha
+RUN yum  update -y
+RUN yum install -y git
+CMD ['/bin/bash']
+____________
+
+Execution:
+
+1. Build the Docker Image:
+docker build -t centos .
+2. Creating/running  the Docker:
+docker run -itd --name c1 -p 8080:80 centos
+
+3.Execution/inside the docker
+  docker exec -it c1(containername/conatinerid) bash
+ git --version
+
+
+
+Checking with Images:
+++++
+docker images 
+   or
+docker image ls
+
+Remove Image:
+++++++
+docker rmi imagename/imageid
+
+Checking with Containers:
++++++++
+docker ps( will show only working containers)
+docker ps -a( will show working & exicited containers)
+
+Delete All Container :
+++++++++++++++++++++
+docker rm -f  $(docker ps -aq)
+
+Delete All Imges:
++++++++++==
+docker rmi prune -a
+
+Login inside the container
+=====================
+docker exec -it containername /bin/bash
+
+Remove container:
++++++
+docker rm containerid/container name
+
+what is nginx:
+++++++++++++++
+nginx is a web server that can also be used as a reverse proxy, load balancer, mail proxy and HTTP cache. 
+
+What is reverse proxy:
+====================
+A reverse proxy is a server that sits in front of web servers and forwards client (e.g. web browser) requests to those web servers. 
+Reverse proxies are typically implemented to help increase security, performance, and reliability.
+
+
+what is daemon off in nginx
++++++++++++++++++++++
+For Docker containers (or for debugging), the daemon off; directive tells Nginx to stay in the foreground. For containers this is useful as best practice is for one container = one process. 
+One server (container) has only one service
+
+what is Foreground and background in docker
+======================================
+Background mode = Run in the background continuously without stopping (like daemon).
+ Foreground or console = If you exit console the process may stop
+
+
+ End to End Deployment for nginx webserver
+======================================
+
+Nginx Webserver using with Ubuntu Image:
++++++++++++++++++
+vim Dockerfile
+FROM ubuntu
+MAINTAINER sobha
+RUN apt-get update -y
+RUN apt-get install -y nginx
+COPY index.html /var/www/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+Exc:
+docker build -t myn1 .
+docker run --name mynginx2 -p 80:80 -d myn1
+
+Connect the webserver
+===================
+Dockerpublic:80
+
+login with hub.docker.com
+
+docker login in local server
+    username:
+    password
+
+docker tag mynginx z12bsobh/mynginx(your private dockerid)
+
+docker push z12bsobh/mynginx:latest
+
+
+what is nginx reverse proxy:
+=======================
+Configure NGINX as a reverse proxy for HTTP and other protocols, with support for modifying request headers and fine-tuned buffering of responses.
+
+This article describes the basic configuration of a proxy server. You will learn how to pass a request from NGINX to proxied servers over different protocols, modify client request headers that are sent to the proxied server, and configure buffering of responses coming from the proxied servers.
+
+Diff B/w P and p:
+++++++++++++++
+P(Upper Letter) -It will take automatic port number
+p(Lower Letter)- it will ask Externalip(ContainerIP):internalip(HostIP)
+
+ List all containers that exited?
+==============================
+docker ps --filter "status=exited"
+
+what is docker networking:
+++++++++++++++++++
+Docker networking is primarily used to establish communication between Docker containers and the outside world via the host machine where the Docker daemon is running.
+ Docker supports different types of networks, each fit for certain use cases.
+
+types of docker networking:
++++++++++++++++++
+1.bridge networks- used within a single host
+2.overlay networks- for multi-host communication
+3.macvlan networks - which are used to connect Docker containers directly to host network interfaces.
+4.Host networks - are best when the network stack should not be isolated from the Docker host, but you want other aspects of the container to be isolated.
+5.Third-party network plugins allow you to integrate Docker with specialized network stacks.
+
+Docker network creation commands:
+==================
+docker  network create  myn1
+
+attach network container
+==================
+docker run -itd --network=myn1 nginx(image name)
+docker run -itd --name myc4 -P nginx
+
+Docker inspect containerid/name
+
+
+
+
+what is Tomcat Application:
+++++++++++++++++++++
+Apache Tomcat (called "Tomcat" for short) is a free and open-source implementation of the Jakarta Servlet, 
+Jakarta Expression Language, and WebSocket technologies.[3] Tomcat provides a "pure Java" HTTP web server environment in which Java code can run.
+
+Tomcat Application - Dockerfile
++++++++++++++++
+
+rm -rf docker
+# Create a Directory
+mkdir docker
+cd docker
+# copy the .war file into the current directory
+cp /var/lib/jenkins/workspace/package/target/workspace/addressbook.war .
+# Create Dockerfile
+touch dockerfile
+cat <<EOT>> dockerfile
+FROM tomcat
+ADD addressbook.war /user/local/tomcat/webapps
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+EOT
+sudo docker build -t myproject:$BUILD_NUMBER .
+sudo docker run -dt -P myproject:$BUILD_NUMBER
+
+Permission Issue
+================
+vim /etc/sudoers
+jenkins ALL=(ALL) NOPASSWD: ALL
+
+what is Docker CGroup?
+=====================
+Control Groups (cgroups) are a feature of the Linux kernel that allow you to limit the access processes and containers have to system resources such as CPU, RAM, IOPS and network. 
+In this lab you will use cgroups to limit the resources available to Docker containers.
+
+Docker micro-services
+===================
+
+Docker allows you containerize your microservices and simplify the delivery and management of those microservices. 
+Containerization provides individual microservices with their own isolated workload environments, making them independently deployable and scalable.
+
+
+Docker Compose:
+++++++++++++
+yaml file - Yaml Ain't Markup Language
+
+- Creating with multiple containers we are using docker-compose
+- It uses YAML format compose file to configure the application services
+- Using a command , the user can then created and start the service from the configurations.
+
+ Docker-Compose Working:
+++++++++++++
+1. Creaing a Dockerfile for the application
+2. Define the service to the make application in docker-compose.yml
+3. Run Docker-compose up to start the application
+
+Multi-ContainerDeployment with Compose
++++++++++++++++++++++++
+1. Docker compose uses project names to isolate environment
+2. The data for all the containers in a service is preserved in volumes
+3. if a service restarted but nothing has changed
+4. Variables can be used in Compose file to customise the service for diff env.
+
+Compose Common Commands:
++++++++++
+docker-compose build  -> build or rebuild a service from the given Dockerfile
+docker-compose run  --> Allow user to run a one-off command in the service
+docker-compose up --> Create and runs service containers
+docker-compose down --> Removes the containers, networks, images, and volumes related to the service.
+
+Environment Varaible  in Compose:
+++++++++++++++++++++
+1. Compose can utilize environment variables inside the compose file from the shell.
+2. Environment Varaible can also be set in the containers by using docker run command with -e flag
+3. this can be accomplished using docker-compose run command
+4. Deafult values fo environment variable can also set by creating a new .envfile
+
+
+key: value
+
+name: 
+++++++++++++++++
+
+3-Tier Architecture:
++++++++++++
+Frontend :
+Node.js (Developer code)
+
+Backend:
+Python Automation
+
+DataBase:
+________
+MongoDB
+
+Docker-compose:
++++++++++
+yaml file
+
+Docker-compose imstallation: on Ubuntu Machine
++++++++++++++++++++
+https://docs.docker.com/compose/install/
+
+dockr installation
+  snap install docker
+
+docker-compose installation
+=======
+1. sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+2. https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+3. sudo chmod +x /usr/local/bin/docker-compose
+4.docker-compose version
+
+Wordpress Application:
+++++++++++++++
+WordPress (WP, WordPress.org) is a free and open-source content management system (CMS) written in PHP[4] and paired with a MySQL or MariaDB database. Features include a plugin architecture and a template system, referred to within WordPress as Themes. 
+
+Pre-requisits:
++++++++++++++
+php
+mysql
+wordpress
+
+Docker-Compose Installation:
+==================
+https://linuxhostsupport.com/blog/how-to-install-and-configure-docker-compose-on-ubuntu-20-04/
+
+
+vim docker-compose.yml
+======================
+
+version: '3'
+
+services:
+ db:
+  image: mysql:5.7
+  volumes:
+   - db_data:/var/lib/mysql
+  restart: always
+  environment:
+   MYSQL_ROOT_PASSWORD: password
+   MYSQL_DATABASE: wordpress
+   MYSQL_USER: wordpress
+   MYSQL_PASSWORD: wordpress
+  networks:
+   - wpsite
+ phpmyadmin:
+  depends_on:
+   - db
+  image: phpmyadmin/phpmyadmin
+  restart: always
+  ports:
+   - '8181:80'
+  environment:
+   PMA_HOST: db
+   MYSQL_ROOT_PASSWORD: password
+  networks:
+   - wpsite
+ Wordpress:
+  depends_on:
+   - db
+  image: wordpress
+  ports:
+   - '8000:80'
+  restart: always
+  volumes: ['./:/var/www/html']
+  environment:
+   WORDPRESS_DB_HOST: db:3306
+   WORDPRESS_DB_USER: wordpress
+   WORDPRESS_DB_PASSWORD: wordpress
+   WORDPRESS_DB_NAME: wordpress
+  networks:
+   - wpsite
+networks:
+ wpsite:
+volumes:
+ db_data:
+
+
+Execution
+============
+docker-compose build
+docker-compose run
+
+docker-compose up -d
+
+Docker Volumes
+============
+Volumes are the preferred mechanism for persisting data generated by and used by Docker containers.
+ While bind mounts are dependent on the directory structure and OS of the host machine, volumes are completely managed by Docker.
+ Volumes have several advantages over bind mounts:
+
+Volumes are easier to back up or migrate than bind mounts.
+You can manage volumes using Docker CLI commands or the Docker API.
+Volumes work on both Linux and Windows containers.
+Volumes can be more safely shared among multiple containers.
+Volume drivers let you store volumes on remote hosts or cloud providers, to encrypt the contents of volumes, or to add other functionality.
+New volumes can have their content pre-populated by a container.
+Volumes on Docker Desktop have much higher performance than bind mounts from Mac and Windows hosts.
+
+Docker Volumes
+**********************************
+Docker Volume Containers
+**************************************
+# docker volume create myvol   // create a volume on host
+
+# docker volume ls    // list the volume on the host, myvol will be there
+
+# docker volume inspect myvol   // gives the path where volume is created on the host
+
+/var/lib/docker/volumes/myvol/_data   // copy this path on notepad
+
+# cd /var/lib/docker/volumes/myvol/_data  
+# ls // no files
+# cd
+
+MOUNT THE VOLUME ON A CONTAINER
+
+# docker run --name u1 -it -v myvol:/tmp ubuntu
+
+	# cd /tmp
+	# ls
+	# touch file1 file2
+	#ls
+# Ctlp+Ctlq
+Use the same path copied above
+# cd /var/lib/docker/volumes/myvol/_data  
+# ls // file1 and file2 files will be present
+
+Create 1 more new file here --> file should be available in container also
+
+# touch file3
+# ls
+#cd
+# docker ps -a
+# docker attach u2 
+# ls
+# cd /tmp
+# ls
+# file1, file2 , file3 will be there
+
+REMOVE THE CONTAINER AND CHECK IF FILES ARE AVIALBLE
+
+# docker rm -f u2
+
+# cd /var/lib/docker/volumes/myvol/_data 
+# ls  ==> still files will be available.
+
+Delete the volume :
+*********************
+Delete containers before.
+
+# docker volume rm myvol   // volume will be removed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
