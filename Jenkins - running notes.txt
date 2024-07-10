@@ -79,5 +79,5 @@ D  - GitHub hook trigger for GIT SCM polling
 whenever developer pushing the code it is automatically taking the input form git hub Jenkins will run the job automatically
 it request for payload URL in git hub - 
 
-
+18 added new line
 
