@@ -1,0 +1,30 @@
+Maven - build tool running notes
+
+1 - Artifacts - images (.war, .ear,.jar)
+.war -webarchiev
+.ear enterprise archieve
+.jar java application
+
+2 maven in build.xml language
+
+3* -  build life cycle 
+validate - validate all necessary info is available 
+compile - compile the source code of the project
+test - test the compiled code using unit testing framework, doesnot required code and package to be deployed
+package - compiled code and package in distributed format as JAR
+verify -  run any checks on results of integration tests to ensure quality criteria are met.
+install - install package in to local repo, for use as a dependency in other projets locally.
+deploy - done in build environment, copies the final package to the remote repo for sharing with other developers and projects.
+
+4 - maven life cycle
+1. compile - convert code in to machine understandable language
+2. code review - reporting tasks, code analysis report - PMD tool
+3. Unit Test - execution test cases, test report ( pass or fail )
+4. code coverage - % code covered by the test executes, coverage report
+5. package - it convert in to .jar, .war, .ear
+
+5. maven - user creation
+Jenkins dashboard - manage Jenkins - create/ add user - add user details- new user created
+Manage authorization
+matrix based security - Jenkins dashboard - manage jekins -  security - saved in PDF doc pls refer
+
