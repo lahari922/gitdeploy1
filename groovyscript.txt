@@ -1,0 +1,36 @@
+pipeline{
+ agent any
+ stages{
+    stage('checkout'){
+        Steps{
+            git 'https://github.com/lahari922/gitdeploy1.git'
+        }
+    }
+    stage('compile'){
+        steps{
+            sh 'mvn compile'
+        }
+    }
+   stage('code'review'){
+    steps{
+        sh 'mvn pmd:pmd'
+    }
+   }
+   stage('unit test'){
+    steps{
+        sh 'mvn test'
+    }
+   }
+   stage('metric check'){
+    steps{
+        sh 'cobertura:cobertura -Dcobetura.report.fromat=xml'
+    }
+   }
+   stage('package'){
+    steps{
+        sh 'mvn package'
+    }
+   }
+   }
+ }
+ 
